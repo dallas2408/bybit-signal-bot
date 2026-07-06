@@ -1,0 +1,90 @@
+# ============================================================
+# Signal Bot — конфигурация. Все параметры меняются здесь,
+# без правки кода.
+# ============================================================
+
+universe:
+  mode: auto                  # auto — отбор по ликвидности | manual — список ниже
+  manual_symbols: [BTCUSDT, ETHUSDT, SOLUSDT]
+  top_n: 40                   # сколько пар держать в работе (по обороту)
+  min_volume_24h_usd: 50000000    # мин. оборот за 24ч, USD
+  min_open_interest_usd: 20000000 # мин. открытый интерес, USD
+  max_spread_pct: 0.05        # макс. спред, % от цены
+  exclude: [USDCUSDT, BTCPERP]
+  refresh_minutes: 60         # как часто пересобирать список пар
+
+timeframes:                   # интервалы Bybit (минуты, "240" = 4H)
+  trend: "240"                # глобальный тренд
+  main: "60"                  # основной анализ
+  entry: "15"                 # точка входа
+  confirm: "5"                # подтверждение
+
+indicators:
+  ema_fast: 50
+  ema_mid: 100
+  ema_slow: 200
+  rsi_period: 14
+  macd_fast: 12
+  macd_slow: 26
+  macd_signal: 9
+  atr_period: 14
+  vol_sma: 20
+
+regime:                       # определение состояния рынка (1H)
+  flat_sep_atr: 1.0           # |EMA50-EMA200| < X*ATR => флэт
+  high_vol_atr_pct: 0.03      # ATR/цена выше => высокая волатильность
+
+strategies:                   # подключение стратегий без правки кода
+  - name: trend_pullback
+    enabled: true
+    weight: 1.0
+    params:
+      pullback_zone_atr: 1.0    # зона отката к EMA50 (1H), в ATR
+      max_extension_atr: 2.5    # анти-догонялка: дальше от EMA50 — не входим
+      rsi_long_min: 35
+      rsi_long_max: 55
+      rsi_short_min: 45
+      rsi_short_max: 65
+      swing_window: 3           # окно свингов для структуры (15M)
+      sl_atr_pad: 0.5           # отступ SL за свинг, в ATR(15M)
+      max_sl_atr: 3.0           # макс. дистанция SL, в ATR(15M)
+      fallback_sl_atr: 1.5      # SL если свинг не найден
+      tp_r: [1.5, 2.5, 4.0]     # тейки в R
+      volume_spike_mult: 1.5    # объём 15M выше SMA*X => бонус
+      funding_extreme: 0.0005   # |funding| выше => перегрев
+
+scoring:
+  min_score: 7.0              # минимальный рейтинг для публикации
+  min_rr: 2.0                 # минимальный Risk/Reward (по TP2)
+  allow_long: true
+  allow_short: true
+
+signals:
+  cooldown_minutes: 240       # пауза по монете после закрытия сигнала
+  max_hold_hours: 48          # сигнал старше => Отменён
+  move_sl_to_breakeven_after_tp1: true
+  check_interval_sec: 60      # частота сопровождения активных сигналов
+
+scan:
+  interval_sec: 300           # частота сканирования рынка
+  pause_between_symbols_sec: 0.4
+
+leverage: 10                  # справочно, для сообщений
+
+data:
+  history_bars: 600           # глубина истории на TF (важно для качества EMA200)
+
+backtest:
+  months: 12
+  fee_pct_per_side: 0.055     # тейкер Bybit, % за сторону
+  slippage_pct: 0.03          # проскальзывание на круг, %
+  exit_weights: [0.4, 0.3, 0.3]   # доли закрытия на TP1/TP2/TP3
+  use_confirm_tf: false           # 5M в бэктесте не используется (база 15M)
+
+logging:
+  dir: logs
+  level: INFO
+
+alerts:
+  bybit_fail_threshold: 5     # подряд ошибок API => алерт админу
+  throttle_minutes: 10        # не чаще одного алерта одного типа
