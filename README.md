@@ -108,10 +108,10 @@ python main.py                        # live scanning
 
 ## Backtest results
 
-See [BACKTEST.md](BACKTEST.md): 627 trades over 12 months (BTC/ETH/SOL), real
-fees and slippage, and an honest "no edge" verdict for the reference strategy
-— this backtester is built to tell the truth, not to draw pretty equity
-curves.
+See [BACKTEST.md](BACKTEST.md) — 627 trades over 12 months with real
+fees, slippage and conservative fills, including an honest "no edge"
+verdict for the reference strategy. This backtester is built to tell
+the truth, not to draw pretty equity curves.
 
 ## Stack
 
