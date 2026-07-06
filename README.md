@@ -39,6 +39,11 @@ high-quality signals to a Telegram channel — with full lifecycle tracking
 - **Monitoring** — admin alerts on Bybit API loss, Telegram errors and loop
   failures (throttled); rotating logs; rejection journal with reasons.
 
+## Live signal in Telegram
+
+![Live signal in Telegram — edited in place to TP1, with a status
+notification below](docs/signal_screenshot.png)
+
 ## Sample signal
 
 ```
