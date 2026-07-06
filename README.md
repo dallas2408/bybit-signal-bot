@@ -91,6 +91,7 @@ pip install -r requirements.txt
 cp config/.env.example config/.env    # bot token, channel id, admin id
 pytest tests/ -q                      # 15 tests
 python -m backtest.engine --symbols BTCUSDT ETHUSDT --months 12
+python scripts/demo_signal.py         # sends a demo signal to your channel
 python main.py                        # live scanning
 ```
 
@@ -104,6 +105,13 @@ python main.py                        # live scanning
 - **Honest limitations are documented** — funding/OI history is not available
   in the backtest (making it *more* conservative than live), and entries are
   simulated at 15M closes.
+
+## Backtest results
+
+See [BACKTEST.md](BACKTEST.md): 627 trades over 12 months (BTC/ETH/SOL), real
+fees and slippage, and an honest "no edge" verdict for the reference strategy
+— this backtester is built to tell the truth, not to draw pretty equity
+curves.
 
 ## Stack
 
